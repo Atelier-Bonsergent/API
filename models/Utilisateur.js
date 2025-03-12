@@ -68,7 +68,7 @@ Utilisateur.init({
   hooks: {
     beforeCreate: async (user) => {
       if (user.mot_de_passe) {
-        user.mot_de_passe = await bcrypt.hash(user.mot_de_passe, 8);
+        user.mot_de_passe = await bcrypt.hash(user.mot_de_passe, 10);
       }
     }
   }
