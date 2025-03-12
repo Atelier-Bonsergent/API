@@ -5,14 +5,14 @@ const jwt = require('jsonwebtoken');
 
 class Utilisateur extends Model {
   async comparePassword(password) {
-    console.log('Comparing passwords:');
-    console.log('Input password:', password);
-    console.log('Stored hash:', this.mot_de_passe);
-    console.log('Hash starts with $2y$:', this.mot_de_passe.startsWith('$2y$'));
+    
+    
+    
+    
     
     try {
       const isValid = await bcrypt.compare(password, this.mot_de_passe);
-      console.log('Password comparison result:', isValid);
+      
       return isValid;
     } catch (error) {
       console.error('Error comparing passwords:', error);
