@@ -1,13 +1,31 @@
 const express = require('express');
-const router = express.Router();
+const { body, param } = require('express-validator');
 const projetController = require('../controllers/projetController');
 const auth = require('../middleware/auth');
 
-// Routes pour les projets
+const router = express.Router();
+
+// Validation rules for creating a project
+const projetValidationRules = [
+    body('titre').isString().withMessage('Titre doit être une chaîne de caractères'),
+    body('type_projet').isString().withMessage('Type de projet doit être une chaîne de caractères'),
+    body('statut').isString().withMessage('Statut doit être une chaîne de caractères'),
+    body('id_utilisateur').isInt().withMessage('ID utilisateur doit être un entier')
+];
+
+// Validation rules for updating a project
+const projetUpdateValidationRules = [
+    body('titre').optional().isString().withMessage('Titre doit être une chaîne de caractères'),
+    body('type_projet').optional().isString().withMessage('Type de projet doit être une chaîne de caractères'),
+    body('statut').optional().isString().withMessage('Statut doit être une chaîne de caractères'),
+    body('id_utilisateur').optional().isInt().withMessage('ID utilisateur doit être un entier')
+];
+
+// Routes
 router.get('/', auth, projetController.getAllProjets);
-router.get('/:id', auth, projetController.getProjetById);
-router.post('/', auth, projetController.createProjet);
-router.put('/:id', auth, projetController.updateProjet);
-router.delete('/:id', auth, projetController.deleteProjet);
+router.get('/:id', auth, param('id').isInt().withMessage('ID doit être un entier'), projetController.getProjetById);
+router.post('/', auth, projetValidationRules, projetController.createProjet);
+router.put('/:id', auth, [param('id').isInt().withMessage('ID doit être un entier'), ...projetUpdateValidationRules], projetController.updateProjet);
+router.delete('/:id', auth, param('id').isInt().withMessage('ID doit être un entier'), projetController.deleteProjet);
 
 module.exports = router;

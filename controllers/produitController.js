@@ -1,15 +1,10 @@
 const { validationResult } = require('express-validator');
-const { Produit, CatalogueFournisseurs } = require('../models');
+const { Produit } = require('../models');
 
 const produitController = {
   getAllProduits: async (req, res) => {
     try {
-      const produits = await Produit.findAll({
-        include: [{
-          model: CatalogueFournisseurs,
-          attributes: ['nom_fournisseur', 'categorie']
-        }]
-      });
+      const produits = await Produit.findAll();
       res.json({ status: 'success', message: 'Produits retrieved', data: produits });
     } catch (error) {
       res.status(500).json({ status: 'error', message: 'Server error', error: error.message });
@@ -23,12 +18,7 @@ const produitController = {
     }
 
     try {
-      const produit = await Produit.findByPk(req.params.id, {
-        include: [{
-          model: CatalogueFournisseurs,
-          attributes: ['nom_fournisseur', 'categorie']
-        }]
-      });
+      const produit = await Produit.findByPk(req.params.id);
       if (!produit) {
         return res.status(404).json({ status: 'fail', message: 'Produit not found' });
       }
