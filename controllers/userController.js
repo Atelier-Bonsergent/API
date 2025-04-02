@@ -4,12 +4,6 @@ const bcrypt = require('bcryptjs');
 const userController = {
 
 
-
-
-
-
-
-
   loginUser: async (req, res) => {
     try {
         const { email, mot_de_passe } = req.body;
@@ -35,7 +29,7 @@ const userController = {
         }
 
         const token = user.generateToken();
-        res.json({ user, token });
+        res.json({ token });
 
     } catch (error) {
         console.error('Erreur dans loginUser:', error);
