@@ -1,6 +1,6 @@
 const express = require('express');
 const { body, param } = require('express-validator');
-const fournisseursController = require('../controllers/fournisseursController');
+const fournisseurController = require('../controllers/fournisseurController');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
@@ -14,10 +14,10 @@ const validationRules = [
 ];
 
 // Routes
-router.get('/', auth, fournisseursController.getAll);
-router.get('/:id', auth, param('id').isInt().withMessage('ID doit être un entier'), fournisseursController.getById);
-router.post('/', auth, validationRules, fournisseursController.create);
-router.put('/:id', auth, [param('id').isInt().withMessage('ID doit être un entier'), ...validationRules], fournisseursController.update);
-router.delete('/:id', auth, param('id').isInt().withMessage('ID doit être un entier'), fournisseursController.delete);
+router.get('/', auth, fournisseurController.getAll);
+router.get('/:id', auth, param('id').isInt().withMessage('ID doit être un entier'), fournisseurController.getById);
+router.post('/', auth, validationRules, fournisseurController.create);
+router.put('/:id', auth, [param('id').isInt().withMessage('ID doit être un entier'), ...validationRules], fournisseurController.update);
+router.delete('/:id', auth, param('id').isInt().withMessage('ID doit être un entier'), fournisseurController.delete);
 
 module.exports = router;

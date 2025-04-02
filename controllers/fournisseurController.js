@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const { Fournisseurs } = require('../models');
 
-const fournisseursController = {
+const fournisseurController = {
   getAll: async (req, res) => {
     try {
       const fournisseurs = await Fournisseurs.findAll();
@@ -79,4 +79,4 @@ const fournisseursController = {
   }
 };
 
-module.exports = fournisseursController;
+module.exports = fournisseurController;
