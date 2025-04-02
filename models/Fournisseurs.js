@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
-class CatalogueFournisseurs extends Model {}
+class Fournisseurs extends Model {}
 
-CatalogueFournisseurs.init({
+Fournisseurs.init({
   id_fournisseurs: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -12,16 +12,12 @@ CatalogueFournisseurs.init({
   nom_fournisseur: {
     type: DataTypes.STRING(255),
     allowNull: false
-  },
-  categorie: {
-    type: DataTypes.STRING(100),
-    allowNull: false
   }
 }, {
   sequelize,
-  modelName: 'CatalogueFournisseurs',
-  tableName: 'cataloguefournisseurs',
+  modelName: 'Fournisseurs',
+  tableName: 'fournisseurs',
   timestamps: false
 });
 
-module.exports = CatalogueFournisseurs; 
+module.exports = Fournisseurs; 

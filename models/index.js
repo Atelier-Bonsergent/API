@@ -4,7 +4,7 @@ const Utilisateur = require('./Utilisateur');
 const Projet = require('./Projet');
 const Media = require('./Media');
 const Produit = require('./Produit');
-const CatalogueFournisseurs = require('./CatalogueFournisseurs');
+const Fournisseurs = require('./Fournisseurs');
 const Devis = require('./Devis');
 
 // Définir les relations
@@ -36,12 +36,12 @@ Devis.belongsTo(Projet, {
   foreignKey: 'id_projet'
 });
 
-CatalogueFournisseurs.hasMany(Produit, {
+Fournisseurs.hasMany(Produit, {
   foreignKey: 'id_fournisseurs',
-  as: 'produits'
+  as: 'produit'
 });
 
-Produit.belongsTo(CatalogueFournisseurs, {
+Produit.belongsTo(Fournisseurs, {
   foreignKey: 'id_fournisseurs'
 });
 
@@ -55,7 +55,7 @@ Devis.belongsToMany(Produit, {
   through: DetailDevis,
   foreignKey: 'id_devis',
   otherKey: 'id_produit',
-  as: 'produits'
+  as: 'produit'
 });
 
 Produit.belongsToMany(Devis, { 
@@ -71,10 +71,9 @@ module.exports = {
   Projet,
   Media,
   Produit,
-  CatalogueFournisseurs,
+  Fournisseurs,
   Devis,
   DetailDevis
-  //Produit,
   //Commande,
   //CommandeProduit
 }; 

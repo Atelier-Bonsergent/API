@@ -37,7 +37,7 @@ Produit.init({
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
-      model: 'cataloguefournisseurs',
+      model: 'fournisseurs',
       key: 'id_fournisseurs'
     }
   }

@@ -1,11 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet'); // Importer helmet
+const helmet = require('helmet');
 require('dotenv').config();
 
 const utilisateurRoutes = require('./routes/utilisateurRoutes');
 const projetRoutes = require('./routes/projetRoutes');
 const produitRoutes = require('./routes/produitRoutes');
+const fournisseursRoutes = require('./routes/fournisseursRoutes');
+const mediaRoutes = require('./routes/mediaRoutes');
 const { sequelize } = require('./models');
 
 const app = express();
@@ -18,15 +20,17 @@ app.use(express.urlencoded({ extended: true }));
 // Configurer Helmet
 app.use(
   helmet({
-    contentSecurityPolicy: false, // Désactiver contentSecurityPolicy pour éviter les conflits
-    crossOriginResourcePolicy: { policy: "cross-origin" }, // Autoriser le partage de contenu
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
   })
 );
 
 // Routes
 app.use('/utilisateurs', utilisateurRoutes);
 app.use('/projets', projetRoutes);
-app.use('/produits', produitRoutes);
+app.use('/produit', produitRoutes);
+app.use('/fournisseurs', fournisseursRoutes);
+app.use('/medias', mediaRoutes); // Ajouté ici
 
 // Database synchronization and server start
 const PORT = process.env.PORT || 3000;
