@@ -6,6 +6,7 @@ const Media = require('./Media');
 const Produit = require('./Produit');
 const Fournisseurs = require('./Fournisseurs');
 const Devis = require('./Devis');
+const Commande = require('./Commande'); 
 
 // Définir les relations
 Utilisateur.hasMany(Projet, {
@@ -73,7 +74,6 @@ module.exports = {
   Produit,
   Fournisseurs,
   Devis,
-  DetailDevis
-  //Commande,
-  //CommandeProduit
-}; 
+  DetailDevis,
+  Commande  // Décommenter cette ligne
+};

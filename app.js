@@ -8,6 +8,8 @@ const projetRoutes = require('./routes/projetRoutes');
 const produitRoutes = require('./routes/produitRoutes');
 const fournisseursRoutes = require('./routes/fournisseursRoutes');
 const mediaRoutes = require('./routes/mediaRoutes');
+const devisRoutes = require('./routes/devisRoutes');
+const commandeRoutes = require('./routes/commandeRoutes');
 const { sequelize } = require('./models');
 
 const app = express();
@@ -29,8 +31,10 @@ app.use(
 app.use('/utilisateurs', utilisateurRoutes);
 app.use('/projets', projetRoutes);
 app.use('/produit', produitRoutes);
-app.use('/fournisseurs', fournisseursRoutes);
-app.use('/medias', mediaRoutes); // Ajouté ici
+app.use('/fournisseurs', fournisseursRoutes);  
+app.use('/medias', mediaRoutes);
+app.use('/devis', devisRoutes);
+app.use('/commandes', commandeRoutes);
 
 // Database synchronization and server start
 const PORT = process.env.PORT || 3000;
