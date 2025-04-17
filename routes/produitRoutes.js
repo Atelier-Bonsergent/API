@@ -42,9 +42,6 @@ const produitUpdateValidationRules = [
     body('prix')
         .optional()
         .isDecimal({ decimal_digits: '0,2' }).withMessage('Prix doit être un nombre décimal positif'),
-    body('quantite')
-        .optional()
-        .isInt({ min: 0 }).withMessage('Quantité doit être un entier non négatif'),
     body('unite_mesure')
         .optional()
         .isString().withMessage('Unité de mesure doit être une chaîne de caractères')

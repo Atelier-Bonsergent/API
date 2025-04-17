@@ -25,10 +25,6 @@ Produit.init({
     type: DataTypes.DECIMAL(15, 2),
     allowNull: false
   },
-  quantite: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
   unite_mesure: {
     type: DataTypes.STRING(50),
     allowNull: false
@@ -44,8 +40,8 @@ Produit.init({
 }, {
   sequelize,
   modelName: 'Produit',
-  tableName: 'produit',
+  tableName: 'produits',
   timestamps: false
 });
 
-module.exports = Produit; 
+module.exports = Produit;

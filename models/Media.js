@@ -21,7 +21,7 @@ Media.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'projet',
+      model: 'Projet',  // Updated from 'projet' to 'Projet'
       key: 'id_projet'
     }
   }
@@ -32,4 +32,4 @@ Media.init({
   timestamps: false
 });
 
-module.exports = Media; 
+module.exports = Media;

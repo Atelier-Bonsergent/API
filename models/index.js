@@ -6,7 +6,7 @@ const Media = require('./Media');
 const Produit = require('./Produit');
 const Fournisseurs = require('./Fournisseurs');
 const Devis = require('./Devis');
-const Commande = require('./Commande'); 
+const DevisProduits = require('./DevisProduits');
 
 // Définir les relations
 Utilisateur.hasMany(Projet, {
@@ -27,7 +27,6 @@ Media.belongsTo(Projet, {
   foreignKey: 'id_projet'
 });
 
-// Nouvelles relations
 Projet.hasMany(Devis, {
   foreignKey: 'id_projet',
   as: 'devis'
@@ -39,28 +38,23 @@ Devis.belongsTo(Projet, {
 
 Fournisseurs.hasMany(Produit, {
   foreignKey: 'id_fournisseurs',
-  as: 'produit'
+  as: 'produits'
 });
 
 Produit.belongsTo(Fournisseurs, {
   foreignKey: 'id_fournisseurs'
 });
 
-// Relation many-to-many entre Devis et Produit
-const DetailDevis = sequelize.define('DetailDevis', {}, {
-  tableName: 'detaildevis',
-  timestamps: false
-});
-
-Devis.belongsToMany(Produit, { 
-  through: DetailDevis,
+// Many-to-many relationship between Devis and Produit
+Devis.belongsToMany(Produit, {
+  through: DevisProduits,
   foreignKey: 'id_devis',
   otherKey: 'id_produit',
-  as: 'produit'
+  as: 'produits'
 });
 
-Produit.belongsToMany(Devis, { 
-  through: DetailDevis,
+Produit.belongsToMany(Devis, {
+  through: DevisProduits,
   foreignKey: 'id_produit',
   otherKey: 'id_devis',
   as: 'devis'
@@ -74,6 +68,5 @@ module.exports = {
   Produit,
   Fournisseurs,
   Devis,
-  DetailDevis,
-  Commande  // Décommenter cette ligne
+  DevisProduits
 };

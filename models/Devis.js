@@ -40,4 +40,4 @@ Devis.init({
   timestamps: false
 });
 
-module.exports = Devis; 
+module.exports = Devis;

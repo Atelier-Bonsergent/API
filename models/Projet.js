@@ -44,8 +44,8 @@ Projet.init({
 }, {
   sequelize,
   modelName: 'Projet',
-  tableName: 'projet',
+  tableName: 'projets',
   timestamps: false
 });
 
-module.exports = Projet; 
+module.exports = Projet;

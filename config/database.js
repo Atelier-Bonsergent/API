@@ -17,8 +17,9 @@ const sequelize = new Sequelize(
   config.database.password,
   {
     host: config.database.host,
-    dialect: config.database.dialect
+    dialect: config.database.dialect,
+    logging: console.log  // Enable logging
   }
 );
 
-module.exports = { config, sequelize }; 
+module.exports = { config, sequelize };

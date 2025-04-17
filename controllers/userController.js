@@ -47,7 +47,7 @@ const userController = {
         nom,
         prenom,
         email,
-        mot_de_passe, // Utilise directement le mot de passe brut, le hook le hashera
+        mot_de_passe,
         telephone,
         role
       });
