@@ -44,4 +44,24 @@ router.post('/register',
 router.get('/profile', auth, userController.getProfile);
 router.get('/', auth, userController.getAllUsers);
 
+router.put('/profile', 
+  auth,
+  [
+    check('email').optional().isEmail().withMessage('Email invalide'),
+    check('nom').optional().notEmpty().withMessage('Le nom ne peut pas être vide'),
+    check('prenom').optional().notEmpty().withMessage('Le prénom ne peut pas être vide'),
+    check('telephone').optional().notEmpty().withMessage('Le numéro de téléphone ne peut pas être vide'),
+    check('mot_de_passe').optional().isLength({ min: 6 }).withMessage('Le mot de passe doit contenir au moins 6 caractères'),
+    check('ancien_mot_de_passe').optional().notEmpty().withMessage('L\'ancien mot de passe est requis pour changer le mot de passe')
+  ],
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+  userController.updateUser
+);
+
 module.exports = router;

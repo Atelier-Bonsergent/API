@@ -39,8 +39,10 @@ const PORT = process.env.PORT || 3000;
 
 sequelize.sync()
   .then(() => {
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
+      console.log(`Accès local: http://localhost:${PORT}`);
+      console.log(`Accès réseau: http://10.101.10.143:${PORT}`);
     });
   })
   .catch(err => {

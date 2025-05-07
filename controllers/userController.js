@@ -113,6 +113,56 @@ const userController = {
     }
   },
 
-  
+  updateUser: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { nom, prenom, email, telephone, mot_de_passe, ancien_mot_de_passe } = req.body;
+
+      const user = await Utilisateur.findByPk(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+      }
+
+      // Si un nouveau mot de passe est fourni, vérifier l'ancien mot de passe
+      if (mot_de_passe) {
+        if (!ancien_mot_de_passe) {
+          return res.status(400).json({ message: 'L\'ancien mot de passe est requis pour changer le mot de passe' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(ancien_mot_de_passe, user.mot_de_passe);
+        if (!isPasswordValid) {
+          return res.status(401).json({ message: 'Ancien mot de passe incorrect' });
+        }
+
+        // Hacher le nouveau mot de passe
+        const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
+        user.mot_de_passe = hashedPassword;
+      }
+
+      // Mise à jour des autres champs
+      await user.update({
+        nom: nom || user.nom,
+        prenom: prenom || user.prenom,
+        email: email || user.email,
+        telephone: telephone || user.telephone
+      });
+
+      res.json({
+        message: 'Profil mis à jour avec succès',
+        utilisateur: {
+          id: user.id_utilisateur,
+          nom: user.nom,
+          prenom: user.prenom,
+          email: user.email,
+          telephone: user.telephone,
+          role: user.role
+        }
+      });
+    } catch (error) {
+      console.error('Erreur dans updateUser:', error);
+      res.status(500).json({ error: error.message });
+    }
+  },
+
 };
 module.exports = userController;
