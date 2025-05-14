@@ -123,6 +123,14 @@ const userController = {
         return res.status(404).json({ message: 'Utilisateur non trouvé' });
       }
 
+      // Préparer l'objet de mise à jour
+      const updateData = {
+        nom: nom || user.nom,
+        prenom: prenom || user.prenom,
+        email: email || user.email,
+        telephone: telephone || user.telephone
+      };
+
       // Si un nouveau mot de passe est fourni, vérifier l'ancien mot de passe
       if (mot_de_passe) {
         if (!ancien_mot_de_passe) {
@@ -131,21 +139,15 @@ const userController = {
 
         const isPasswordValid = await bcrypt.compare(ancien_mot_de_passe, user.mot_de_passe);
         if (!isPasswordValid) {
-          return res.status(401).json({ message: 'Ancien mot de passe incorrect' });
+          return res.status(400).json({ message: 'Ancien mot de passe incorrect' });
         }
 
-        // Hacher le nouveau mot de passe
-        const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
-        user.mot_de_passe = hashedPassword;
+        // Hacher le nouveau mot de passe et l'ajouter à l'objet de mise à jour
+        updateData.mot_de_passe = await bcrypt.hash(mot_de_passe, 10);
       }
 
-      // Mise à jour des autres champs
-      await user.update({
-        nom: nom || user.nom,
-        prenom: prenom || user.prenom,
-        email: email || user.email,
-        telephone: telephone || user.telephone
-      });
+      // Mise à jour de tous les champs en une seule opération
+      await user.update(updateData);
 
       res.json({
         message: 'Profil mis à jour avec succès',
@@ -158,6 +160,7 @@ const userController = {
           role: user.role
         }
       });
+
     } catch (error) {
       console.error('Erreur dans updateUser:', error);
       res.status(500).json({ error: error.message });
