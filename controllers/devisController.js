@@ -10,7 +10,7 @@ const devisController = {
         include: [
           {
             model: Projet,
-            attributes: ['titre', 'description']
+            attributes: ['id_projet', 'titre', 'description']
           },
           {
             model: Produit,
@@ -24,7 +24,18 @@ const devisController = {
         ]
       });
       
-      res.json({ status: 'success', message: 'Devis retrieved', data: devis });
+      // Format response to match required structure
+      const formattedDevis = devis.map(item => {
+        const devisJson = item.toJSON();
+        return {
+          ...devisJson,
+          id_projet: undefined,
+          projet: devisJson.Projet,
+          Projet: undefined
+        };
+      });
+      
+      res.json({ status: 'success', message: 'Devis retrieved', data: formattedDevis });
     } catch (error) {
       console.error('Erreur détaillée lors de la récupération des devis:', error);
       res.status(500).json({ status: 'error', message: 'Server error', error: error.message });
@@ -43,7 +54,7 @@ const devisController = {
         include: [
           {
             model: Projet,
-            attributes: ['titre', 'description']
+            attributes: ['id_projet', 'titre', 'description']
           },
           {
             model: Produit,
@@ -61,8 +72,18 @@ const devisController = {
         console.log(`Devis avec l'ID: ${req.params.id} non trouvé`);
         return res.status(404).json({ status: 'fail', message: 'Devis not found' });
       }
-      console.log('Devis trouvé:', JSON.stringify(devis, null, 2));
-      res.json({ status: 'success', message: 'Devis retrieved', data: devis });
+      
+      // Format response to match required structure
+      const devisJson = devis.toJSON();
+      const formattedDevis = {
+        ...devisJson,
+        id_projet: undefined,
+        projet: devisJson.Projet,
+        Projet: undefined
+      };
+      
+      console.log('Devis trouvé:', JSON.stringify(formattedDevis, null, 2));
+      res.json({ status: 'success', message: 'Devis retrieved', data: formattedDevis });
     } catch (error) {
       console.error(`Erreur détaillée lors de la récupération du devis avec l'ID: ${req.params.id}`, error);
       res.status(500).json({ status: 'error', message: 'Server error', error: error.message });
@@ -97,7 +118,7 @@ const devisController = {
         include: [
           {
             model: Projet,
-            attributes: ['titre', 'description']
+            attributes: ['id_projet', 'titre', 'description']
           },
           {
             model: Produit,
@@ -110,11 +131,20 @@ const devisController = {
           }
         ]
       });
+      
+      // Format response to match required structure
+      const devisJson = devisComplet.toJSON();
+      const formattedDevis = {
+        ...devisJson,
+        id_projet: undefined,
+        projet: devisJson.Projet,
+        Projet: undefined
+      };
 
       res.status(201).json({ 
         status: 'success', 
         message: 'Devis created', 
-        data: devisComplet 
+        data: formattedDevis 
       });
     } catch (error) {
       await t.rollback();
@@ -165,7 +195,7 @@ const devisController = {
         include: [
           {
             model: Projet,
-            attributes: ['titre', 'description']
+            attributes: ['id_projet', 'titre', 'description']
           },
           {
             model: Produit,
@@ -178,11 +208,20 @@ const devisController = {
           }
         ]
       });
+      
+      // Format response to match required structure
+      const devisJson = devisUpdated.toJSON();
+      const formattedDevis = {
+        ...devisJson,
+        id_projet: undefined,
+        projet: devisJson.Projet,
+        Projet: undefined
+      };
 
       res.json({ 
         status: 'success', 
         message: 'Devis updated', 
-        data: devisUpdated 
+        data: formattedDevis 
       });
     } catch (error) {
       await t.rollback();
