@@ -21,7 +21,7 @@ Media.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Projet',  // Updated from 'projet' to 'Projet'
+      model: 'projets',  // Updated from 'projet' to 'Projet'
       key: 'id_projet'
     }
   }

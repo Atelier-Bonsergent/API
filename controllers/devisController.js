@@ -27,7 +27,7 @@ const devisController = {
       // Format response to match required structure
       const formattedDevis = devis.map(item => {
         const devisJson = item.toJSON();
-        return {
+          return {
           ...devisJson,
           id_projet: undefined,
           projet: devisJson.Projet,

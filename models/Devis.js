@@ -29,7 +29,7 @@ Devis.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'projet',
+      model: 'projets',
       key: 'id_projet'
     }
   }

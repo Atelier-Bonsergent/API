@@ -60,6 +60,23 @@ Produit.belongsToMany(Devis, {
   as: 'devis'
 });
 
+// Relations directes pour DevisProduits
+DevisProduits.belongsTo(Devis, {
+  foreignKey: 'id_devis'
+});
+
+DevisProduits.belongsTo(Produit, {
+  foreignKey: 'id_produit'
+});
+
+Devis.hasMany(DevisProduits, {
+  foreignKey: 'id_devis'
+});
+
+Produit.hasMany(DevisProduits, {
+  foreignKey: 'id_produit'
+});
+
 module.exports = {
   sequelize,
   Utilisateur,
