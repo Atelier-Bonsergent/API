@@ -18,8 +18,6 @@ const produitValidationRules = [
         .escape().withMessage('Description contient des caractères non autorisés'),
     body('prix')
         .isDecimal({ decimal_digits: '0,2' }).withMessage('Prix doit être un nombre décimal positif'),
-    body('quantite')
-        .isInt({ min: 0 }).withMessage('Quantité doit être un entier non négatif'),
     body('unite_mesure')
         .isString().withMessage('Unité de mesure doit être une chaîne de caractères')
         .escape().withMessage('Unité de mesure contient des caractères non autorisés')
