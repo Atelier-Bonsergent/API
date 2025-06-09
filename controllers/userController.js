@@ -42,6 +42,11 @@ const userController = {
     try {
       const { nom, prenom, email, mot_de_passe, telephone, role } = req.body;
       
+      // Check if user already exists
+      const existingUser = await Utilisateur.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(400).json({ message: "Un utilisateur avec cet email existe déjà" });
+      }
   
       const newUser = await Utilisateur.create({
         nom,
@@ -51,9 +56,6 @@ const userController = {
         telephone,
         role
       });
-  
-      
-      
   
       const token = newUser.generateToken();
       res.status(201).json({
