@@ -27,7 +27,7 @@ router.post('/register',
     check('nom').notEmpty().withMessage('Le nom est requis'),
     check('prenom').notEmpty().withMessage('Le prénom est requis'),
     check('email').isEmail().withMessage('Email invalide'),
-    check('mot_de_passe').isLength({ min: 6 }).withMessage('Le mot de passe doit contenir au moins 6 caractères'),
+    check('mot_de_passe').optional().isLength({ min: 6 }).withMessage('Le mot de passe doit contenir au moins 6 caractères'),
     check('telephone').notEmpty().withMessage('Le numéro de téléphone est requis'),
     check('role').notEmpty().withMessage('Le rôle est requis')
   ],
