@@ -55,10 +55,9 @@ Utilisateur.init({
   telephone: {
     type: DataTypes.STRING(20),
     allowNull: false
-  },
-  mot_de_passe: {
+  },  mot_de_passe: {
     type: DataTypes.STRING(255),
-    allowNull: false
+    allowNull: true
   }
 }, {
   sequelize,
