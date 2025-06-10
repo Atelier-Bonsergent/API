@@ -15,7 +15,10 @@ const { sequelize } = require('./models');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'https://www.atelierbonsergent.fr',
+  credentials: true // utile si tu utilises des cookies ou des headers d'autorisation
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
