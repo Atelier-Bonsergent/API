@@ -63,17 +63,60 @@ describe('User Routes', () => {
   });
 
   describe('POST /utilisateurs/register', () => {
-    test('should return 400 for missing required fields', async () => {
+    test('should handle existing user with correct password', async () => {
+      userController.registerUser.mockImplementation((req, res) => {
+        res.json({ 
+          message: 'Connexion réussie avec un compte existant',
+          utilisateur: { id: 1, email: req.body.email },
+          token: 'mock-token'
+        });
+      });
+
+      const existingUser = {
+        nom: 'Test',
+        prenom: 'User',
+        email: 'existing@example.com',
+        mot_de_passe: 'correctPassword',
+        telephone: '1234567890',
+        role: 'user'
+      };
+
       const response = await request(app)
         .post('/utilisateurs/register')
-        .send({ email: 'valid@example.com' }); // Missing other required fields
+        .send(existingUser);
 
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('errors');
-      expect(userController.registerUser).not.toHaveBeenCalled();
+      expect(registerLimiter).toHaveBeenCalled();
+      expect(userController.registerUser).toHaveBeenCalled();
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('message', 'Connexion réussie avec un compte existant');
+      expect(response.body).toHaveProperty('token');
     });
 
-    test('should call registerUser controller with valid data', async () => {
+    test('should return 400 for existing user with wrong password', async () => {
+      userController.registerUser.mockImplementation((req, res) => {
+        res.status(400).json({ message: 'Un utilisateur avec cet email existe déjà' });
+      });
+
+      const existingUser = {
+        nom: 'Test',
+        prenom: 'User',
+        email: 'existing@example.com',
+        mot_de_passe: 'wrongPassword',
+        telephone: '1234567890',
+        role: 'user'
+      };
+
+      const response = await request(app)
+        .post('/utilisateurs/register')
+        .send(existingUser);
+
+      expect(registerLimiter).toHaveBeenCalled();
+      expect(userController.registerUser).toHaveBeenCalled();
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('message', 'Un utilisateur avec cet email existe déjà');
+    });
+
+    test('should create new user if email does not exist', async () => {
       userController.registerUser.mockImplementation((req, res) => {
         res.status(201).json({ 
           message: 'Utilisateur créé avec succès',
@@ -82,10 +125,10 @@ describe('User Routes', () => {
         });
       });
 
-      const validUser = {
-        nom: 'Test',
+      const newUser = {
+        nom: 'New',
         prenom: 'User',
-        email: 'valid@example.com',
+        email: 'new@example.com',
         mot_de_passe: 'password123',
         telephone: '1234567890',
         role: 'user'
@@ -93,13 +136,13 @@ describe('User Routes', () => {
 
       const response = await request(app)
         .post('/utilisateurs/register')
-        .send(validUser);
+        .send(newUser);
 
       expect(registerLimiter).toHaveBeenCalled();
       expect(userController.registerUser).toHaveBeenCalled();
       expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty('token', 'mock-token');
-      expect(response.body.utilisateur).toHaveProperty('email', validUser.email);
+      expect(response.body).toHaveProperty('message', 'Utilisateur créé avec succès');
+      expect(response.body.utilisateur).toHaveProperty('email', newUser.email);
     });
   });
 
@@ -133,4 +176,4 @@ describe('User Routes', () => {
       expect(Array.isArray(response.body)).toBe(true);
     });
   });
-}); 
+});

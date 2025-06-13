@@ -1,14 +1,13 @@
-const userController = require('../../controllers/userController');
 const { Utilisateur } = require('../../models');
+const userController = require('../../controllers/userController');
 const bcrypt = require('bcryptjs');
 
 // Mock the models and bcrypt
 jest.mock('../../models', () => ({
   Utilisateur: {
     findOne: jest.fn(),
-    findAll: jest.fn(),
-    findByPk: jest.fn(),
-    create: jest.fn()
+    create: jest.fn(),
+    findAll: jest.fn()
   }
 }));
 
@@ -23,16 +22,20 @@ describe('User Controller', () => {
   
   beforeEach(() => {
     req = {
-      body: {},
+      body: {
+        nom: 'Test',
+        prenom: 'User',
+        email: 'testuser@example.com',
+        mot_de_passe: 'password123',
+        telephone: '1234567890',
+        role: 'user'
+      },
       user: { id: 1 }
     };
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
     };
-  });
-
-  afterEach(() => {
     jest.clearAllMocks();
   });
 
@@ -112,26 +115,34 @@ describe('User Controller', () => {
 
   describe('registerUser', () => {
     test('should create a new user and return token', async () => {
-      req.body = {
-        nom: 'Test',
-        prenom: 'User',
-        email: 'testuser@example.com',
-        mot_de_passe: 'password123',
-        telephone: '1234567890',
-        role: 'user'
-      };
-      
+      // Mock user creation
       const mockUser = {
         id_utilisateur: 1,
         ...req.body,
-        generateToken: jest.fn().mockReturnValue('token123')
+        generateToken: jest.fn().mockReturnValue('mock-token')
       };
       
+      // Mock findOne to return null (user doesn't exist)
+      Utilisateur.findOne.mockResolvedValue(null);
+      
+      // Mock create to return our mockUser
       Utilisateur.create.mockResolvedValue(mockUser);
 
       await userController.registerUser(req, res);
 
-      expect(Utilisateur.create).toHaveBeenCalledWith(req.body);
+      expect(Utilisateur.findOne).toHaveBeenCalledWith({
+        where: { email: req.body.email }
+      });
+      
+      expect(Utilisateur.create).toHaveBeenCalledWith({
+        nom: req.body.nom,
+        prenom: req.body.prenom,
+        email: req.body.email,
+        mot_de_passe: req.body.mot_de_passe,
+        telephone: req.body.telephone,
+        role: req.body.role
+      });
+
       expect(mockUser.generateToken).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({
@@ -140,8 +151,39 @@ describe('User Controller', () => {
           id: mockUser.id_utilisateur,
           email: mockUser.email
         },
-        token: 'token123'
+        token: 'mock-token'
+      });
+    });
+
+    test('should return error if user already exists', async () => {
+      // Mock existing user
+      Utilisateur.findOne.mockResolvedValue({
+        id_utilisateur: 1,
+        email: req.body.email
+      });
+
+      await userController.registerUser(req, res);
+
+      expect(Utilisateur.findOne).toHaveBeenCalledWith({
+        where: { email: req.body.email }
+      });
+      expect(Utilisateur.create).not.toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({
+        message: "Un utilisateur avec cet email existe déjà"
+      });
+    });
+
+    test('should handle server errors', async () => {
+      // Mock database error
+      Utilisateur.findOne.mockRejectedValue(new Error('Database error'));
+
+      await userController.registerUser(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({
+        error: 'Database error'
       });
     });
   });
-}); 
+});
